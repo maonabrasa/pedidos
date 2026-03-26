@@ -1,347 +1,336 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mão na Brasa | Cardápio Digital</title>
-    
-    <meta name="theme-color" content="#ea580c">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="logo.png">
-    <link rel="apple-touch-icon" href="logo.png">
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Syncopate:wght@700&display=swap');
-        
-        html { scroll-behavior: smooth; scroll-padding-top: 240px; }
-        body { background-color: #050505; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        html { scroll-behavior: smooth; }
+        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
 
-        .bg-fixed-body {
-            position: fixed; inset: 0; background: linear-gradient(rgba(0, 0, 0, 0.88), rgba(5, 5, 5, 0.98)),
-                url('https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1965&auto=format&fit=crop');
-            background-size: cover; background-position: center; z-index: -2;
-        }
-
-        .font-title { font-family: 'Syncopate', sans-serif; }
-
-        /* CARTÃO DE BOAS-VINDAS */
-        #welcome-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.92);
-            backdrop-filter: blur(20px); z-index: 500; display: flex; align-items: center; justify-content: center;
-        }
-        .welcome-card {
-            background: linear-gradient(145deg, #262626, #000000);
-            border-radius: 40px; padding: 50px 30px; max-width: 400px; width: 92%;
-            text-align: center; border: 1px solid rgba(234, 88, 12, 0.3);
-            box-shadow: 0 0 50px rgba(234, 88, 12, 0.2);
-        }
-
-        .cta-button {
-            background: linear-gradient(90deg, #ea580c, #f97316);
-            color: white; font-weight: 900; text-transform: uppercase;
-            padding: 20px; border-radius: 20px; font-size: 13px; letter-spacing: 1px;
-            box-shadow: 0 10px 30px rgba(234, 88, 12, 0.4); width: 100%; transition: all 0.3s;
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px;
-            position: relative; overflow: hidden; transition: 0.3s;
-        }
-
-        .img-box {
-            width: 105px; height: 105px; border-radius: 20px;
+        .bg-fixed-burger {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.95)), 
+                        url('https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?q=80&w=2071&auto=format&fit=crop'); 
             background-size: cover; background-position: center;
-            flex-shrink: 0; background-color: #1a1a1a; border: 1px solid rgba(255,255,255,0.1);
+            filter: blur(5px); z-index: -2; transform: scale(1.1);
         }
 
-        .nav-btn {
-            white-space: nowrap; padding: 12px 24px; border-radius: 16px;
-            background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.05);
-            color: #71717a; font-weight: 800; font-size: 11px; text-transform: uppercase;
+        .overlay-brasa {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at bottom, rgba(234, 88, 12, 0.25) 0%, transparent 75%);
+            z-index: -1; pointer-events: none; animation: pulse-brasa 4s infinite alternate;
         }
-        .nav-btn.active { background: #ea580c; color: white; border-color: #ea580c; }
+        @keyframes pulse-brasa { 0% { opacity: 0.4; } 100% { opacity: 1; } }
 
-        .tag-badge {
-            position: absolute; top: 10px; left: 10px; padding: 5px 12px;
-            border-radius: 8px; font-size: 9px; font-weight: 900; text-transform: uppercase; z-index: 10;
+        .faisca {
+            position: fixed; background: #ff7300; width: 2px; height: 2px;
+            border-radius: 50%; pointer-events: none; z-index: 50;
+            animation: subir 5s linear infinite; opacity: 0.8; box-shadow: 0 0 5px #ff7300;
+        }
+        @keyframes subir {
+            0% { transform: translateY(110vh) translateX(0); opacity: 1; }
+            100% { transform: translateY(-10vh) translateX(30px); opacity: 0; }
         }
 
+        header { background: rgba(0, 0, 0, 0.95); border-bottom: 2px solid #ea580c; box-shadow: 0 0 25px rgba(234, 88, 12, 0.6); }
+        .item-card { background: rgba(24, 24, 27, 0.9); border: 1px solid #333; border-radius: 1.25rem; overflow: hidden; transition: 0.3s; cursor: pointer; }
+        
+        /* Melhoria: Feedback Visual de Clique */
+        .item-card:active { transform: scale(0.95); border-color: #ea580c; }
+        
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* Status de Fechado */
+        .closed-overlay { filter: grayscale(1); opacity: 0.6; pointer-events: none; }
     </style>
 </head>
-
 <body>
-    <div class="bg-fixed-body"></div>
 
-    <div id="welcome-overlay">
-        <div class="welcome-card animate__animated animate__fadeInUp">
-            <div class="mb-6 inline-block p-4 rounded-full bg-orange-600/10 border border-orange-600/20">
-                <i class="fas fa-fire text-orange-600 text-3xl"></i>
-            </div>
-            <h2 class="font-title text-2xl mb-4 italic tracking-tighter text-white">O FOGO JÁ <br><span class="text-orange-600">ESTÁ ACESO!</span></h2>
-            <p class="text-zinc-400 text-sm leading-relaxed mb-10">
-                Sinta o aroma da brasa e a suculência do verdadeiro burger artesanal. 
-                <span class="text-zinc-200 block mt-2 font-bold italic">A melhor mordida da sua vida começa agora.</span>
-            </p>
-            <button onclick="closeWelcome()" class="cta-button">🔥 QUERO MATAR MINHA FOME AGORA</button>
-        </div>
-    </div>
+    <div class="bg-fixed-burger"></div>
+    <div class="overlay-brasa"></div>
 
-    <div class="bg-orange-600 text-white text-[10px] font-black uppercase tracking-[0.2em] py-2 text-center sticky top-0 z-[110]">
-        🍔 PEÇA JÁ O SEU ARTESANAL FAVORITO!
-    </div>
+    <header class="sticky top-0 z-[60] p-4 flex flex-col items-center backdrop-blur-md">
+        <img src="maonabrasa.png" alt="Mão na Brasa" class="h-20 mb-2 drop-shadow-[0_0_10px_rgba(234,88,12,0.9)]" onerror="this.src='https://via.placeholder.com/200x80/000000/ea580c?text=MÃO+NA+BRASA'">
+        
+        <div id="status-loja" class="text-[10px] font-bold uppercase px-3 py-1 rounded-full mb-2"></div>
 
-    <header class="sticky top-[30px] z-[100] bg-black/80 backdrop-blur-2xl border-b border-white/10 p-4">
-        <div class="max-w-3xl mx-auto text-center">
-            <h1 class="font-title text-xl tracking-tighter uppercase mb-2">Mão na <span class="text-orange-600">Brasa</span></h1>
-            <div id="status-tag" class="inline-block px-4 py-1 rounded-full text-[9px] font-black uppercase italic mb-4">Verificando...</div>
-            <nav class="flex gap-2 overflow-x-auto no-scrollbar">
-                <a href="#section-combos" class="nav-btn active" onclick="setActive(this)">🔥 Combos</a>
-                <a href="#section-burgers" class="nav-btn" onclick="setActive(this)">🍔 Burgers</a>
-                <a href="#section-porcoes" class="nav-btn" onclick="setActive(this)">🍟 Porções</a>
-                <a href="#section-sobremesas" class="nav-btn" onclick="setActive(this)">🍩 Doces</a>
-                <a href="#section-bebidas" class="nav-btn" onclick="setActive(this)">🥤 Bebidas</a>
-            </nav>
-        </div>
+        <nav class="flex gap-4 text-[20px] font-black uppercase tracking-widest text-zinc-400 overflow-x-auto no-scrollbar w-full justify-center">
+            <a href="#combos">Combos</a>
+            <a href="#burguers">Burguers</a>
+            <a href="#porcoes">Porções</a>
+            <a href="#bebidas">Bebidas</a>
+        </nav>
     </header>
 
-    <main class="max-w-3xl mx-auto p-4 pb-40">
-        <div id="menu-container"></div>
+    <main class="max-w-4xl mx-auto p-4 pb-40 relative">
+        <h2 id="combos" class="text-orange-500 font-black italic uppercase text-xl mb-6 mt-4">🔥 Combos e Barcas</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12" id="combo-items"></div>
+
+        <h2 id="burguers" class="text-orange-500 font-black italic uppercase text-xl mb-6">🍔 Hambúrgueres</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-12" id="burger-items"></div>
+
+        <h2 id="porcoes" class="text-orange-500 font-black italic uppercase text-xl mb-6">🍟 Porções</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12" id="portion-items"></div>
+
+        <h2 id="bebidas" class="text-orange-500 font-black italic uppercase text-xl mb-6">🥤 Bebidas</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="beverage-items"></div>
     </main>
 
-    <div id="modal-item" class="fixed inset-0 bg-black/95 z-[200] hidden items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-[#0a0a0a] border border-white/10 w-full max-w-sm rounded-[40px] p-8">
-            <h3 id="modal-name" class="font-bold text-orange-500 uppercase text-center mb-6 tracking-widest text-lg italic"></h3>
-            <div id="modal-addons-list" class="space-y-3 mb-6 max-h-60 overflow-y-auto no-scrollbar"></div>
-            <div id="obs-container">
-                <p class="text-[10px] font-bold text-zinc-500 uppercase mb-2 ml-1">Alguma Observação?</p>
-                <textarea id="modal-obs" placeholder="Ex: Ponto da carne, sem cebola..." class="bg-white/5 border border-white/10 rounded-2xl p-4 text-white w-full h-20 outline-none"></textarea>
-            </div>
-            <button onclick="addToCart()" class="cta-button mt-6">Adicionar ao Pedido</button>
-            <button onclick="closeModal('modal-item')" class="w-full text-zinc-600 font-bold text-[10px] uppercase mt-4">Voltar</button>
-        </div>
+    <div id="cart-bar" class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md bg-orange-600 p-4 rounded-2xl flex justify-between items-center hidden shadow-2xl z-[70] cursor-pointer" onclick="toggleCart()">
+        <span class="font-black uppercase text-sm text-white">🛒 Ver Pedido (<span id="cart-count">0</span>)</span>
+        <span id="total-display" class="font-black text-lg text-white">R$ 0,00</span>
     </div>
 
-    <div id="modal-checkout" class="fixed inset-0 bg-black/98 z-[300] hidden items-center justify-center p-4 backdrop-blur-xl">
-        <div class="bg-[#0a0a0a] border border-white/10 w-full max-w-sm rounded-[40px] p-8 shadow-2xl overflow-y-auto max-h-[90vh] no-scrollbar">
-            <h3 class="font-bold text-orange-500 uppercase text-center mb-4 tracking-widest text-lg italic">Seu Pedido</h3>
-            <div id="resumo-pedido" class="bg-white/5 border border-white/10 rounded-2xl p-5 text-[11px] mb-6 space-y-3"></div>
-            <div class="space-y-4">
-                <input type="text" id="client-name" placeholder="Seu Nome" class="bg-white/5 border border-white/10 rounded-xl p-4 w-full text-white outline-none">
-                <select id="order-type" class="bg-white/5 border border-white/10 rounded-xl p-4 w-full text-white outline-none" onchange="toggleAddress(); updateResumo();">
-                    <option value="entrega">Entregar em casa 🚚</option>
-                    <option value="retirada">Retirar no local 📍</option>
+    <div id="cart-modal" class="fixed inset-0 bg-black/98 backdrop-blur-xl z-[100] hidden flex flex-col p-4 overflow-y-auto">
+        <div class="w-full max-w-lg mx-auto pb-10 text-white">
+            <div class="flex justify-between items-center mb-6 border-b border-zinc-800 pb-4">
+                <h2 class="text-2xl font-black uppercase italic">Finalizar Pedido</h2>
+                <button onclick="toggleCart()" class="text-zinc-500 text-4xl">&times;</button>
+            </div>
+            
+            <div id="cart-list" class="space-y-3 mb-6"></div>
+            
+            <div class="space-y-4 text-black font-bold">
+                <input type="text" id="customer-name" placeholder="Seu Nome" class="w-full p-4 rounded-xl bg-zinc-100 outline-none">
+                <select id="delivery-method" onchange="updateCart()" class="w-full p-4 rounded-xl bg-zinc-100 outline-none">
+                    <option value="retirada">Vou retirar na Hamburgueria</option>
+                    <option value="entrega">Entregar em casa (+ R$ 10,00)</option>
                 </select>
-                <div id="address-fields"><input type="text" id="client-address" placeholder="Endereço Completo" class="bg-white/5 border border-white/10 rounded-xl p-4 w-full text-white outline-none"></div>
-                <select id="payment-method" class="bg-white/5 border border-white/10 rounded-xl p-4 w-full text-white outline-none"><option value="Pix">Pix</option><option value="Cartão">Cartão</option><option value="Dinheiro">Dinheiro</option></select>
+                <input type="text" id="customer-address" placeholder="Endereço Completo" class="w-full p-4 rounded-xl bg-zinc-100 hidden outline-none">
+                <textarea id="order-notes" placeholder="Observações (Sem cebola, ponto da carne...)" class="w-full p-4 rounded-xl bg-zinc-100 outline-none h-20 resize-none"></textarea>
+                <select id="payment-method" onchange="toggleTroco()" class="w-full p-4 rounded-xl bg-zinc-100 outline-none">
+                    <option value="Pix">Pix</option>
+                    <option value="Cartão">Cartão</option>
+                    <option value="Dinheiro">Dinheiro</option>
+                </select>
+                <input type="text" id="troco-input" placeholder="Troco para quanto?" class="w-full p-4 rounded-xl bg-zinc-100 hidden outline-none">
             </div>
-            <button onclick="sendToWhatsApp()" class="w-full bg-green-600 py-5 rounded-2xl font-black uppercase text-xs tracking-widest mt-8">FINALIZAR NO WHATSAPP</button>
-            <button onclick="closeModal('modal-checkout')" class="w-full text-zinc-600 font-bold text-[10px] uppercase mt-4">Continuar Comprando</button>
-        </div>
-    </div>
 
-    <div id="cart-bar" class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[94%] max-w-md bg-orange-600 p-5 rounded-[30px] hidden z-[150] shadow-2xl flex items-center justify-between cursor-pointer" onclick="openCheckout()">
-        <div class="flex items-center gap-4">
-            <span id="cart-qty" class="bg-black/20 w-10 h-10 flex items-center justify-center rounded-full font-black text-sm">0</span>
-            <span class="font-black uppercase text-[11px] tracking-widest italic">Ver Carrinho</span>
+            <div class="bg-zinc-900 p-6 rounded-2xl my-6 border border-zinc-800 flex justify-between items-center">
+                <span class="text-zinc-400 font-black uppercase text-xs">Total</span>
+                <span id="modal-total" class="text-3xl font-black text-orange-500">R$ 0,00</span>
+            </div>
+
+            <button id="btn-send" onclick="sendWhatsApp()" class="w-full bg-green-600 py-5 rounded-2xl font-black uppercase text-xl flex items-center justify-center gap-3 hover:bg-green-700 text-white shadow-lg">
+                <i class="fab fa-whatsapp text-2xl"></i> Enviar para o WhatsApp
+            </button>
         </div>
-        <span id="cart-total" class="font-black text-xl italic tracking-tighter">R$ 0,00</span>
     </div>
 
     <script>
-        const WHATSAPP_NUMBER = "556492360895";
-        const DELIVERY_FEE = 10.00;
-        let cart = [];
-        let currentItem = null;
+        // CONFIGURAÇÃO DE HORÁRIO (Ex: 18:00 às 23:30)
+        const OPEN_HOUR = 18;
+        const CLOSE_HOUR = 23;
+        const CLOSE_MINUTES = 30;
 
-        const burgerExtras = [
-            { name: "Carne Extra", price: 9.90 },
-            { name: "Bacon Extra", price: 5.90 },
-            { name: "Queijo Extra", price: 3.90 },
-            { name: "Salada Extra", price: 0.90 },
-            { name: "Cebola Extra", price: 0.90 },
-            { name: "Molho Extra", price: 0.90 }
+        let cart = {}; // Melhoria: Agora é um objeto para agrupar quantidades
+
+        const combos = [
+            { name: "Combo Individual", price: 39.90, desc: "Classic Salada + Batata Frita + Bacon + Queijo Prato", img: "combo.jpg" },
+            { name: "BRASA DUPLO (BARCA)", price: 79.90, desc: "2 Burguers + Batata com Bacon e Cheddar + 2 Refris 350ml", img: "barca.jpg" },
+            { name: "Combo Econômico", price: 34.90, desc: "Classic Burguer + Refrigerante Lata 350ml", img: "economico.jpg" }
         ];
 
-        const menu = {
-            combos: [
-                { name: "Barca", price: 79.90, desc: "2 Burguers + Batata com Bacon e Cheddar", img: "barca1.jpg", hasAddons: true, tag: "vendido" },
-                { name: "Combo Individual", price: 49.90, desc: "Classic Salada + Batata Frita + Bacon + Queijo Prato", img: "combo.jpg", hasAddons: true, tag: "chef" },
-                { name: "Brasa Duplo", price: 91.90, desc: "2 Burguers + Batata com Bacon e Cheddar + 2 coca cola 350ml", img: "barca.jpg", hasAddons: true, tag: "vendido" }
-            ],
-            burgers: [
-                { name: "Na Brasa Prime", price: 51.90, desc: "Dois blends, dobro de queijo, 3 bacon e ovo.", img: "prime.jpg", hasAddons: true, tag: "chef" },
-                { name: "Black na Brasa", price: 47.90, desc: "Pão Black, dois blends e dose tripla de cheddar.", img: "black.jpg", hasAddons: true, tag: "vendido" },
-                { name: "Costela Prime", price: 47.90, desc: "Blend, costela desfiada BBQ e cream cheese maçaricado.", img: "costela.jpg", hasAddons: true, tag: "" },
-                { name: "Piscina de Chaddar", price: 44.90, desc: "Burger com bacon dentro de piscina de cheddar.", img: "piscina.jpg", hasAddons: true, tag: "vendido" },
-                { name: "Bacon Burguer Duplo", price: 49.00, desc: "Dois blends, duas camadas de bacon e molho.", img: "duplo.jpg", hasAddons: true, tag: "" },
-                { name: "Bacon Burguer", price: 36.90, desc: "Blend, bacon crocante e queijo prato.", img: "bacon.jpg", hasAddons: true, tag: "" },
-                { name: "Bacon Burguer Triplo", price: 58.90, desc: "Três blends, três bacon e cebola caramelizada.", img: "triplobacon.jpg", hasAddons: true, tag: "" },
-                { name: "Chee se Burger", price: 25.90, desc: "Blend suculento, cheddar duplo e maionese.", img: "chesse.jpg", hasAddons: true, tag: "" },
-                { name: "Classic Burguer Salada", price: 29.90, desc: "Blend, queijo prato, salada e maionese.", img: "salada.jpg", hasAddons: true, tag: "" },
-                { name: "Classic Burguer Salada Especial", price: 37.90, desc: "Blend 160g, bacon, queijo e salada.", img: "saladaespecial.jpg", hasAddons: true, tag: "" }
-            ],
-            porcoes: [    
-                { name: "Batata Frita Especial 250g", price: 19.90, desc: "Cheddar ou Queijo e Bacon.", img: "batata250.jpg", hasAddons: false, tag: "" },
-                { name: "Batata Frita Especial 500g", price: 34.90, desc: "Cheddar ou Queijo e Bacon.", img: "batata500.jpg", hasAddons: false, tag: "vendido" },
-                { name: "Aneis de cebola", price: 19.90, desc: "Crocantes.", img: "onion.jpg", hasAddons: false, tag: "" },
-                { name: "Batata Especial de Strogonoff", price: 27.90, desc: "Batata, strogonoff e catupiry.", img: "bstrogonoff.jpg", hasAddons: false, tag: "" },
-                { name: "Batata Especial de Costela", price: 27.90, desc: "Batata, costela e catupiry.", img: "bcostela.jpg", hasAddons: false, tag: "chef" },
-                { name: "Batata Especial de Calabresa", price: 27.90, desc: "Batata, calabresa, bacon, mussarela.", img: "bmussarela.jpg", hasAddons: false, tag: "" },
-                { name: "Batata Especial de Carne", price: 27.90, desc: "Batata, strogonoff de carne e catupiry.", img: "bcarne.jpg", hasAddons: false, tag: "" }
-            ],
-            sobremesas: [
-                { name: "Brigadeiro Sortido", price: 16.00, desc: "Caixa com 4.", img: "brigadeiro.jpg", hasAddons: false, tag: "" },
-                { name: "Brawnie com Sorvete", price: 22.00, desc: "Sorvete e Ganache.", img: "Brawnie com Sorvete.jpg", hasAddons: false, tag: "chef" },
-                { name: "Pizza de Brownie", price: 27.00, desc: "Ninho e Nutella.", img: "Browniepizza.jpg", hasAddons: false, tag: "vendido" },
-                { name: "Pudim Cremoso", price: 12.00, desc: "Leite condensado.", img: "pudim.jpg", hasAddons: false, tag: "" }
-            ],
-            bebidas: [
-                { name: "Coca-Cola 1.5L", price: 13.00, desc: "Garrafa gelada", img: "coca2l.jpg", hasAddons: false },
-                { name: "Guaraná Mineiros 1.5L", price: 13.00, desc: "Garrafa gelada", img: "Guarana.jpg", hasAddons: false },
-                { name: "Coca-Cola Lata", price: 6.00, desc: "350ml gelada", img: "coca350.jpg", hasAddons: false },
-                { name: "Coca-Cola Zero Lata", price: 6.00, desc: "350ml gelada", img: "cocazero350.jpg", hasAddons: false },
-                { name: "Guaraná Mineiros Lata", price: 6.00, desc: "350ml gelada", img: "guaranaM350.jpg", hasAddons: false },
-                { name: "Suco de Laranja", price: 12.00, desc: "400ml Natural", img: "sucodelaranja.jpg", hasAddons: false },
-                { name: "Suco de Acerola", price: 12.00, desc: "400ml Natural", img: "acelora.jpg", hasAddons: false },
-                { name: "Suco Detox", price: 12.00, desc: "Couve, Gengibre, Abacaxi, Cenoura e Hortelã 400ml Natural", img: "detox.jpg", hasAddons: false },
-                { name: "Suco de Abacaxi/Hortelã", price: 10.00, desc: "400ml Natural", img: "abacaxi.jpg", hasAddons: false },
-                { name: "Água com Gás", price: 5.00, desc: "500ml", img: "aguag.jpg", hasAddons: false },
-                { name: "Água sem Gás", price: 4.00, desc: "500ml", img: "agua.jpg", hasAddons: false }
-            ]
-        };
+        const burgers = [
+            { name: "Na Brasa Prime", price: 52.00, desc: "Dois blends bovinos suculentos preparados na brasa, servidos com o dobro de queijo (Prato e Cheddar) e a perfeição de três camadas de bacon crocante. Para coroar, um ovo caipira de gema brilhante, salada fresca (alface, tomate e cebola roxa) e nossa maionese da casa sem óleo. Tudo isso no pão brioche macio, selado na manteiga.", img: "prime.jpg" },
+            { name: "Black na Brasa", price: 48.00, desc: "Pão Black selado na manteiga, recheado com dois blends bovinos suculentos feitos na brasa e bacon crocante. A intensidade do sabor fica por conta do queijo cheddar em dose dupla: duas camadas generosas derretidas mais um molho cheddar bem caprichado por cima.", img: "black.jpg" },
+            { name: "Costela Prime", price: 45.00, desc: "Blend bovino suculento feito na brasa, coroado com costela desfiada e defumada ao molho barbecue. A cremosidade fica por conta do queijo prato e do nosso cream cheese maçaricado na hora, trazendo um toque defumado extra. Servido no exclusivo pão de parmesão selado na manteiga e finalizado com molho especial da casa.", img: "costela.jpg" },
+            { name: "Piscina de Chaddar", price: 45.00, desc: "Nosso burger clássico feito na brasa, com blend bovino suculento e MUITO bacon crocante, servido dentro de uma verdadeira piscina de cheddar cremoso. Para completar o banquete, acompanha uma porção generosa de batatas fritas e anéis de cebola (Onion Rings) para você mergulhar sem moderação.", img: "image_7bb97d.jpg" },
+            { name: "Bacon Burguer Duplo", price: 49.00, desc: "Dois blends bovinos suculentos preparados na brasa, acompanhados por duas camadas generosas de bacon super crocante e queijo derretido. Finalizado com nosso molho especial da casa (feito sem óleo) e servido no pão brioche macio, selado na manteiga.", img: "image_7bb97d.jpg" },
+            { name: "Bacon Burguer", price: 37.00, desc: "Blend bovino suculento grelhado na brasa, coberto com fatias generosas de bacon crocante e queijo prato derretido. Finalizado com nosso molho especial da casa (feito sem óleo) e servido no pão brioche macio, selado na manteiga.", img: "bacon.jpg" },
+            { name: "Bacon Burguer Triplo", price: 59.00, desc: "três blends bovinos suculentos feitos na brasa e três camadas generosas de bacon super crocante. Para elevar o nível, adicionamos nossa cebola caramelizada artesanal e a maionese especial da casa (sem óleo). Tudo isso no pão brioche macio, selado na manteiga.", img: "triplobacon.jpg" },
+            { name: "Burguer Abacaxi", price: 38.00, desc: "Blend bovino suculento preparado na brasa, acompanhado de abacaxi chapeado e selado no mel, fatias de banana da terra douradas e queijo prato derretido. O frescor da rúcula traz o equilíbrio perfeito para essa combinação única. Tudo servido no pão brioche macio e selado na manteiga.", img: "image_7bbfe9.jpg" },
+            { name: "Chee se Burger", price: 26.00, desc: "Blend bovino suculento feito na brasa, coberto com uma camada generosa de queijo cheddar duplo derretido. Finalizado com nossa exclusiva maionese especial da casa (feita sem óleo), no pão brioche macio e selado na manteiga.", img: "chesse.jpg" },
+            { name: "Classic Burguer Salada", price: 30.00, desc: "Blend bovino preparado na brasa, queijo prato, alface, tomate, cebola roxa e nossa famosa maionese da casa sem óleo. Servido no pão brioche selado na manteiga.", img: "salada.jpg" },
+            { name: "Classic Burguer Salada Especial", price: 38.00, desc: "Blend bovino de 160g preparado na brasa, coberto com bacon super crocante e queijo derretido. Acompanha alface, tomate, cebola roxa e nosso exclusivo molho especial (feito sem óleo). Tudo isso servido no pão brioche macio, selado na manteiga.", img: "saladaespecial.jpg" }
+        ];
 
-        function closeWelcome() { document.getElementById('welcome-overlay').style.display = 'none'; document.body.style.overflow = 'auto'; }
+        const porcoes = [
+            { name: "Batata Especial 250g", price: 20.00, desc: "Porção de batata frita, bacon e queijo.", img: "batata250.jpg" },
+            { name: "Batata Brasa Especial 500g", price: 35.00, desc: "Batata frita, com Cheddar e Bacon.", img: "batata500.jpg" },
+            { name: "Aneis de cebola", price: 20.00, desc: "Anéis de cebola empanados.", img: "onion.jpg" }
+        ];
 
-        function render() {
-            const container = document.getElementById('menu-container'); container.innerHTML = "";
-            Object.keys(menu).forEach(cat => {
-                let html = `<section id="section-${cat}" class="mb-10"><h2 class="text-orange-500 font-title text-[10px] mb-6 tracking-[0.4em] uppercase flex items-center gap-3"><span class="w-10 h-[1px] bg-orange-600"></span> ${cat}</h2><div class="grid gap-5">`;
-                menu[cat].forEach(p => {
-                    let tagHtml = p.tag === 'vendido' ? `<span class="tag-badge bg-orange-600 text-white">🔥 Famoso</span>` : p.tag === 'chef' ? `<span class="tag-badge bg-yellow-500 text-black">🌟 Chef</span>` : "";
-                    html += `<div class="glass-card flex p-3 gap-4" onclick="openModal('${p.name}', ${p.price}, ${p.hasAddons})">${tagHtml}<div class="img-box" style="background-image: url('${p.img}')"></div><div class="flex flex-col justify-center flex-grow"><h3 class="font-bold text-sm uppercase italic mb-1">${p.name}</h3><p class="text-[11px] text-zinc-400 leading-snug mb-2 line-clamp-2 italic">${p.desc}</p><span class="text-orange-500 font-black italic">R$ ${p.price.toFixed(2)}</span></div></div>`;
-                });
-                container.innerHTML += html + `</div></section>`;
-            });
-        }
+        const beverages = [
+            { name: "Coca-Cola 2 Litros", price: 13.00, desc: "Garrafa gelada", img: "coca2l.jpg" },
+            { name: "Guaraná Antarctica 2L", price: 13.00, desc: "Garrafa gelada", img: "Guarana.jpg" },
+            { name: "Coca-Cola Lata", price: 6.00, desc: "350ml gelada", img: "coca350.jpg" },
+            { name: "Coca-Cola Zero Lata", price: 6.00, desc: "350ml gelada", img: "cocazero350.jpg" },
+            { name: "Guaraná Lata", price: 6.00, desc: "350ml gelada", img: "guarana350.jpg" },
+            { name: "Fanta Laranja Lata", price: 6.00, desc: "350ml gelada", img: "fanta350.jpg" },
+            { name: "Suco de Laranja", price: 10.00, desc: "400ml Natural", img: "sucodelaranja.jpg" },
+            { name: "Suco de Acerola", price: 10.00, desc: "400ml Natural", img: "acelora.jpg" },
+            { name: "Suco de Abacaxi/Hortelã", price: 10.00, desc: "400ml Natural", img: "abacaxi.jpg" },
+            { name: "Água com Gás", price: 4.00, desc: "500ml", img: "aguag.jpg" },
+            { name: "Água sem Gás", price: 4.00, desc: "500ml", img: "agua.jpg" }
+        ];
 
-        function openModal(name, price, hasAddons) {
-            currentItem = { name, price, addons: [], obs: "" };
-            document.getElementById('modal-name').innerText = name;
-            document.getElementById('modal-obs').value = "";
-            const list = document.getElementById('modal-addons-list');
-            list.innerHTML = hasAddons ? `<p class="text-[9px] font-black text-orange-500 uppercase mb-4 tracking-widest">Turbine seu pedido:</p>` + burgerExtras.map(a => `<label class="flex justify-between items-center bg-white/5 p-4 rounded-2xl mb-2 cursor-pointer border border-white/5"><span class="text-[11px] uppercase font-bold">${a.name} (+R$${a.price.toFixed(2)})</span><input type="checkbox" class="w-6 h-6 accent-orange-600 rounded-lg" onchange="updateAddon('${a.name}', ${a.price}, this.checked)"></label>`).join('') : "";
-            document.getElementById('obs-container').style.display = hasAddons ? 'block' : 'none';
-            document.getElementById('modal-item').style.display = 'flex';
-        }
-
-        function updateAddon(name, price, checked) {
-            if (checked) currentItem.addons.push({ name, price });
-            else currentItem.addons = currentItem.addons.filter(a => a.name !== name);
-        }
-
-        function addToCart() {
-            currentItem.obs = document.getElementById('modal-obs').value;
-            cart.push({ ...currentItem }); closeModal('modal-item'); updateCartBar();
-        }
-
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            if(cart.length === 0) closeModal('modal-checkout');
-            updateCartBar();
-            updateResumo();
-        }
-
-        function updateCartBar() {
-            let total = 0; cart.forEach(i => { total += i.price; i.addons.forEach(a => total += a.price); });
-            document.getElementById('cart-qty').innerText = cart.length;
-            document.getElementById('cart-total').innerText = `R$ ${total.toFixed(2)}`;
-            document.getElementById('cart-bar').style.display = cart.length > 0 ? 'flex' : 'none';
-        }
-
-        function updateResumo() {
-            const resumo = document.getElementById('resumo-pedido'); 
-            let html = ""; let sub = 0;
-            const isEntrega = document.getElementById('order-type').value === 'entrega';
+        function checkStoreStatus() {
+            const now = new Date();
+            const hour = now.getHours();
+            const min = now.getMinutes();
+            const statusDiv = document.getElementById('status-loja');
+            const btnSend = document.getElementById('btn-send');
             
-            cart.forEach((item, index) => {
-                let v = item.price; item.addons.forEach(a => v += a.price); sub += v;
-                html += `
-                    <div class="flex justify-between items-start mb-2">
-                        <div class="flex flex-col">
-                            <span class="font-bold text-white">${item.name}</span>
-                            ${item.addons.map(a => `<span class="text-[9px] text-zinc-500">+ ${a.name}</span>`).join('')}
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="text-white">R$ ${v.toFixed(2)}</span>
-                            <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-400 p-1">
-                                <i class="fas fa-trash-can"></i>
-                            </button>
+            const isOpen = (hour > OPEN_HOUR || (hour === OPEN_HOUR && min >= 0)) && 
+                           (hour < CLOSE_HOUR || (hour === CLOSE_HOUR && min <= CLOSE_MINUTES));
+
+            if (isOpen) {
+                statusDiv.innerText = "● Aberto Agora";
+                statusDiv.className = "text-[10px] font-bold uppercase px-3 py-1 rounded-full mb-2 bg-green-500/20 text-green-500 border border-green-500/50";
+            } else {
+                statusDiv.innerText = "● Fechado (Abre às " + OPEN_HOUR + ":00)";
+                statusDiv.className = "text-[10px] font-bold uppercase px-3 py-1 rounded-full mb-2 bg-red-500/20 text-red-500 border border-red-500/50";
+                document.querySelector('main').classList.add('closed-overlay');
+                btnSend.disabled = true;
+                btnSend.classList.replace('bg-green-600', 'bg-zinc-700');
+                btnSend.innerText = "Loja Fechada";
+            }
+        }
+
+        function renderGrid(items, containerId) {
+            const container = document.getElementById(containerId);
+            items.forEach(item => {
+                container.innerHTML += `
+                    <div class="item-card flex flex-col" onclick="addToCart('${item.name}', ${item.price}, '${item.img}')">
+                        <img src="${item.img}" loading="lazy" class="w-full aspect-square object-cover" onerror="this.src='https://via.placeholder.com/300/222/ea580c?text=FOTO'">
+                        <div class="p-3 flex flex-col flex-grow">
+                            <h3 class="font-black text-[11px] uppercase italic leading-tight">${item.name}</h3>
+                            <p class="text-[9px] text-zinc-400 mt-2 flex-grow">${item.desc}</p>
+                            <div class="mt-3 flex justify-between items-center">
+                                <span class="text-orange-500 font-black text-sm">R$ ${item.price.toFixed(2)}</span>
+                                <i class="fas fa-plus-circle text-orange-500/50"></i>
+                            </div>
                         </div>
                     </div>`;
             });
-
-            if(isEntrega) {
-                html += `<div class="border-t border-white/10 mt-3 pt-3 flex justify-between text-zinc-400"><span>Taxa de Entrega:</span><span>R$ ${DELIVERY_FEE.toFixed(2)}</span></div>`;
-                sub += DELIVERY_FEE;
-            } else {
-                html += `<div class="border-t border-white/10 mt-3 pt-3 flex justify-between text-orange-400"><span>Retirada:</span><span>Grátis</span></div>`;
-            }
-            html += `<div class="flex justify-between text-orange-500 font-black text-sm uppercase mt-2"><span>Total:</span><span>R$ ${sub.toFixed(2)}</span></div>`;
-            resumo.innerHTML = html;
         }
 
-        function openCheckout() { updateResumo(); document.getElementById('modal-checkout').style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        function toggleAddress() { document.getElementById('address-fields').style.display = document.getElementById('order-type').value === 'entrega' ? 'block' : 'none'; }
-        function setActive(el) { document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); el.classList.add('active'); }
-
-        function sendToWhatsApp() {
-            const name = document.getElementById('client-name').value; if(!name) return alert("Diga seu nome!");
-            const type = document.getElementById('order-type').value;
-            let msg = `*MÃO NA BRASA - NOVO PEDIDO*\n*Cliente:* ${name}\n*Tipo:* ${type.toUpperCase()}\n\n`; 
-            let total = 0;
-            cart.forEach(i => {
-                let it = i.price; msg += `⭐ *${i.name}*\n`;
-                i.addons.forEach(a => { it += a.price; msg += `  + ${a.name}\n`; });
-                if(i.obs) msg += `  _Obs: ${i.obs}_\n`;
-                msg += `  Sub: R$ ${it.toFixed(2)}\n\n`;
-                total += it;
+        function renderBebidas() {
+            const container = document.getElementById('beverage-items');
+            beverages.forEach(item => {
+                container.innerHTML += `
+                    <div class="bg-zinc-900/90 p-3 rounded-xl flex items-center gap-3 border border-zinc-800" onclick="addToCart('${item.name}', ${item.price}, '${item.img}')">
+                        <img src="${item.img}" loading="lazy" class="w-12 h-12 object-cover rounded-lg" onerror="this.src='https://via.placeholder.com/100/222/ea580c?text=BEBIDA'">
+                        <div class="flex-grow">
+                            <h4 class="font-black text-[10px] uppercase italic">${item.name}</h4>
+                            <span class="text-orange-500 font-bold text-xs">R$ ${item.price.toFixed(2)}</span>
+                        </div>
+                        <i class="fas fa-plus text-orange-500 mr-2 text-xs"></i>
+                    </div>`;
             });
-            if(type === 'entrega') {
-                const addr = document.getElementById('client-address').value;
-                if(!addr) return alert("Diga o endereço!");
-                msg += `*Endereço:* ${addr}\n*Entrega:* R$ ${DELIVERY_FEE.toFixed(2)}\n`;
-                total += DELIVERY_FEE;
+        }
+
+        function addToCart(name, price, img) { 
+            if(cart[name]) {
+                cart[name].qty += 1;
+            } else {
+                cart[name] = { price, img, qty: 1 };
             }
-            msg += `*PAGAMENTO:* ${document.getElementById('payment-method').value}\n`;
-            msg += `*TOTAL: R$ ${total.toFixed(2)}*`;
-            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`);
+            document.getElementById('cart-bar').classList.remove('hidden'); 
+            updateCart();
         }
 
-        const tagStatus = document.getElementById('status-tag');
-        const now = new Date();
-        const hour = now.getHours();
-        const day = now.getDay(); 
+        function updateCart() {
+            const m = document.getElementById('delivery-method').value;
+            document.getElementById('customer-address').classList.toggle('hidden', m === 'retirada');
+            
+            let subtotal = 0;
+            let count = 0;
+            let cartHtml = '';
 
-        if(day === 1) { 
-            tagStatus.innerText = "● FECHADO (SEGUNDA)";
-            tagStatus.classList.add("bg-red-500/20", "text-red-500");
-        } else if(hour >= 19 || hour < 1) {
-            tagStatus.innerText = "● ABERTO AGORA";
-            tagStatus.classList.add("bg-green-500/20", "text-green-500");
-        } else {
-            tagStatus.innerText = "● FECHADO";
-            tagStatus.classList.add("bg-red-500/20", "text-red-500");
+            for (let name in cart) {
+                const item = cart[name];
+                subtotal += item.price * item.qty;
+                count += item.qty;
+                cartHtml += `
+                <div class="flex items-center gap-4 bg-zinc-900/80 p-3 rounded-xl border border-zinc-800">
+                    <img src="${item.img}" class="w-10 h-10 object-cover rounded-lg" onerror="this.src='https://via.placeholder.com/50'">
+                    <div class="flex-grow">
+                        <div class="text-[10px] font-black uppercase text-white">${name}</div>
+                        <div class="text-orange-500 text-[10px]">R$ ${item.price.toFixed(2)}</div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="changeQty('${name}', -1)" class="w-6 h-6 bg-zinc-800 rounded-full text-xs">-</button>
+                        <span class="text-xs font-bold">${item.qty}</span>
+                        <button onclick="changeQty('${name}', 1)" class="w-6 h-6 bg-orange-600 rounded-full text-xs">+</button>
+                    </div>
+                </div>`;
+            }
+
+            const total = subtotal + (m === 'entrega' ? 10 : 0);
+            document.getElementById('cart-count').innerText = count;
+            document.getElementById('total-display').innerText = `R$ ${total.toFixed(2)}`;
+            document.getElementById('modal-total').innerText = `R$ ${total.toFixed(2)}`;
+            document.getElementById('cart-list').innerHTML = cartHtml || '<p class="text-center text-zinc-500">Seu carrinho está vazio</p>';
+            
+            if(count === 0) document.getElementById('cart-bar').classList.add('hidden');
         }
-        render();
+
+        function changeQty(name, delta) {
+            cart[name].qty += delta;
+            if(cart[name].qty <= 0) delete cart[name];
+            updateCart();
+        }
+
+        function toggleCart() { 
+            document.getElementById('cart-modal').classList.toggle('hidden');
+            document.body.classList.toggle('overflow-hidden');
+        }
+
+        function toggleTroco() {
+            const pay = document.getElementById('payment-method').value;
+            document.getElementById('troco-input').classList.toggle('hidden', pay !== 'Dinheiro');
+        }
+
+        function sendWhatsApp() {
+            const nome = document.getElementById('customer-name').value;
+            const metodo = document.getElementById('delivery-method').value;
+            const endereco = document.getElementById('customer-address').value;
+            const notas = document.getElementById('order-notes').value;
+            const pagamento = document.getElementById('payment-method').value;
+            const troco = document.getElementById('troco-input').value;
+
+            if(!nome) return alert("Preencha seu nome!");
+            if(metodo === 'entrega' && !endereco) return alert("Preencha o endereço!");
+            if(Object.keys(cart).length === 0) return alert("Carrinho vazio!");
+
+            let texto = `🔥 *MÃO NA BRASA - NOVO PEDIDO*\n\n`;
+            texto += `👤 *Cliente:* ${nome}\n`;
+            texto += `📍 *Tipo:* ${metodo === 'entrega' ? 'Entrega 🛵' : 'Retirada 🥡'}\n`;
+            if(metodo === 'entrega') texto += `🏠 *Endereço:* ${endereco}\n`;
+            if(notas) texto += `📝 *Obs:* ${notas}\n`;
+            texto += `💳 *Pagamento:* ${pagamento}${troco ? ' (Troco p/ ' + troco + ')' : ''}\n\n`;
+            texto += `🛒 *ITENS DO PEDIDO:*\n`;
+            
+            for (let name in cart) {
+                texto += `• ${cart[name].qty}x ${name} (R$ ${(cart[name].price * cart[name].qty).toFixed(2)})\n`;
+            }
+            
+            texto += `\n💰 *TOTAL:* *${document.getElementById('modal-total').innerText}*`;
+
+            const url = `https://api.whatsapp.com/send?phone=5564992360895&text=${encodeURIComponent(texto)}`;
+            window.location.href = url;
+        }
+
+        // Faiscas Animadas
+        for (let i = 0; i < 20; i++) {
+            let f = document.createElement('div');
+            f.className = 'faisca';
+            f.style.left = Math.random() * 100 + 'vw';
+            f.style.animationDelay = Math.random() * 5 + 's';
+            document.body.appendChild(f);
+        }
+
+        checkStoreStatus();
+        renderGrid(combos, 'combo-items');
+        renderGrid(burgers, 'burger-items');
+        renderGrid(porcoes, 'portion-items');
+        renderBebidas();
     </script>
 </body>
 </html>
