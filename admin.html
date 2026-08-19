@@ -1842,111 +1842,101 @@ function escapeHtml(value) {
 
 async function checkLogin() {
 
+    showLogin('');
 
-    const {
-        data: {
-            session
+    try {
+
+        const {
+            data: sessionData,
+            error: sessionError
+        } = await supabaseClient.auth.getSession();
+
+        if (sessionError) {
+            console.error('Erro ao obter sessão:', sessionError);
+            showLogin('Erro ao verificar sessão: ' + sessionError.message);
+            return;
         }
-    } =
-        await supabaseClient
-            .auth
-            .getSession();
 
+        const session = sessionData?.session;
 
-    if (!session) {
+        if (!session?.user) {
+            showLogin('');
+            return;
+        }
 
-        showLogin();
-
-        return;
-
-    }
-
-
-    const {
-        data: admin,
-        error
-    } =
-        await supabaseClient
-
-            .from("mnb_admins")
-
-            .select("*")
-
-            .eq(
-                "user_id",
-                session.user.id
-            )
-
-            .eq(
-                "active",
-                true
-            )
-
+        const {
+            data: admin,
+            error: adminError
+        } = await supabaseClient
+            .from('mnb_admins')
+            .select('user_id,email,name,active')
+            .eq('user_id', session.user.id)
+            .eq('active', true)
             .maybeSingle();
 
+        console.log('Usuário autenticado:', session.user);
+        console.log('Administrador encontrado:', admin);
+        console.log('Erro ao consultar administrador:', adminError);
 
-    if (
-        error ||
-        !admin
-    ) {
+        if (adminError) {
+            showLogin(
+                'Erro ao verificar administrador: ' +
+                adminError.message
+            );
+            return;
+        }
 
-        await supabaseClient
-            .auth
-            .signOut();
+        if (!admin) {
+            await supabaseClient.auth.signOut();
+            showLogin(
+                'Login realizado, mas este usuário não está cadastrado como administrador.'
+            );
+            return;
+        }
 
+        showApp(session.user);
 
-        showLogin();
+        await loadAll();
 
+    } catch (error) {
 
-        $("loginError")
-            .textContent =
-            "Este usuário não possui acesso ao painel.";
+        console.error('Erro inesperado no login:', error);
 
-        return;
-
+        showLogin(
+            error?.message ||
+            'Erro inesperado ao verificar o acesso.'
+        );
     }
-
-
-    showApp(
-        session.user
-    );
-
-
-    await loadAll();
-
 }
 
 
-function showLogin() {
+function showLogin(message = '') {
 
-    $("loginScreen")
+    $('loginScreen')
         .classList
-        .remove("hidden");
+        .remove('hidden');
 
-
-    $("app")
+    $('app')
         .classList
-        .add("hidden");
+        .add('hidden');
 
+    $('loginError')
+        .textContent = message;
 }
 
 
 function showApp(user) {
 
-    $("loginScreen")
+    $('loginScreen')
         .classList
-        .add("hidden");
+        .add('hidden');
 
-
-    $("app")
+    $('app')
         .classList
-        .remove("hidden");
+        .remove('hidden');
 
-
-    $("loggedUser")
-        .textContent =
-        user.email || "";
-
+    $('loggedUser')
+        .textContent = user?.email || '';
 }
 
 
@@ -1954,60 +1944,68 @@ function showApp(user) {
    FORM LOGIN
 ========================================================= */
 
-$("loginForm")
+$('loginForm')
     .addEventListener(
-        "submit",
+        'submit',
         async event => {
 
             event.preventDefault();
 
+            const errorBox = $('loginError');
 
-            $("loginError")
-                .textContent =
-                "Entrando...";
+            errorBox.textContent = 'Entrando...';
 
+            const email = $('email')
+                .value
+                .trim()
+                .toLowerCase();
 
-            const email =
-                $("email")
-                    .value
-                    .trim();
+            const password = $('password').value;
 
-
-            const password =
-                $("password")
-                    .value;
-
-
-            const {
-                error
-            } =
-                await supabaseClient
-                    .auth
-                    .signInWithPassword({
-
-                        email,
-
-                        password
-
-                    });
-
-
-            if (error) {
-
-                console.error(error);
-
-
-                $("loginError")
-                    .textContent =
-                    "Email ou senha incorretos.";
-
+            if (!email || !password) {
+                errorBox.textContent =
+                    'Digite o e-mail e a senha.';
                 return;
-
             }
 
+            try {
 
-            await checkLogin();
+                const {
+                    data,
+                    error
+                } = await supabaseClient
+                    .auth
+                    .signInWithPassword({
+                        email,
+                        password
+                    });
 
+                console.log('Resposta do login:', data);
+                console.log('Erro do login:', error);
+
+                if (error) {
+                    errorBox.textContent =
+                        error.message ||
+                        'Não foi possível entrar.';
+                    return;
+                }
+
+                if (!data?.user) {
+                    errorBox.textContent =
+                        'O Supabase não retornou o usuário.';
+                    return;
+                }
+
+                await checkLogin();
+
+            } catch (error) {
+
+                console.error('Erro no login:', error);
+
+                errorBox.textContent =
+                    error?.message ||
+                    'Erro inesperado ao entrar.';
+            }
         }
     );
 
