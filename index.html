@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#ff4b00" />
+  <meta name="description" content="Mão na Brasa - burgers artesanais feitos na brasa. Monte seu pedido e envie pelo WhatsApp." />
+  <title>Mão na Brasa | Burgers Artesanais</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" href="mao-na-brasa-icon.png" />
+  <link rel="apple-touch-icon" href="mao-na-brasa-apple-touch.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+  <div class="site-bg" aria-hidden="true"></div>
+  <div class="embers" aria-hidden="true"></div>
+
+  <header class="topbar" id="topo">
+    <a href="#topo" class="brand" aria-label="Mão na Brasa - início">
+      <img id="brandLogo" src="mao-na-brasa-icon-512.png" alt="Logo Mão na Brasa" />
+      <span id="brandLabel">Mão na <strong>Brasa</strong></span>
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav" id="navMenu">
+      <a href="#topo">Home</a>
+      <a href="#cardapio">Cardápio</a>
+      <a href="#sobre">Sobre</a>
+      <a href="#contato">Contato</a>
+      <a href="admin.html">Admin</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy reveal">
+        <p class="eyebrow" id="heroEyebrow">Burger artesanal • brasa • sabor</p>
+        <h1 id="heroTitle">Churrasco.<br><span>Sabor.</span><br>Atitude.</h1>
+        <p class="hero-text" id="heroText">Burgers artesanais feitos na brasa, porções caprichadas, bebidas geladas e combos para matar a fome de verdade.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#cardapio">Ver cardápio</a>
+          <a class="btn btn-ghost" id="heroWhatsapp" target="_blank" rel="noopener">Fazer pedido</a>
+        </div>
+        <div class="trust-list">
+          <div><strong>BRASA</strong><span>Feito na brasa</span></div>
+          <div><strong>BURGER</strong><span>Artesanal</span></div>
+          <div><strong>TOP</strong><span>Qualidade premium</span></div>
+        </div>
+      </div>
+
+      <div class="hero-card reveal delay-1">
+        <img id="heroLogo" src="mao-na-brasa-icon-512.png" alt="Ícone oficial Mão na Brasa" />
+        <div class="hero-card-glow"></div>
+      </div>
+    </section>
+
+    <section class="section banner-section reveal" aria-label="Identidade Mão na Brasa">
+      <img id="bannerImage" src="maonabrasa-banner.png" alt="Capa Mão na Brasa com burger, fogo e identidade visual" />
+    </section>
+
+    <section class="section highlights reveal">
+      <article>
+        <span>01</span>
+        <h3 id="highlight1Title">Brasa de verdade</h3>
+        <p id="highlight1Text">Visual forte, sabor marcante e uma experiência feita para quem gosta de lanche com presença.</p>
+      </article>
+      <article>
+        <span>02</span>
+        <h3 id="highlight2Title">Pedido rápido</h3>
+        <p id="highlight2Text">Escolha os itens, confira o total e envie tudo pronto direto para o WhatsApp.</p>
+      </article>
+      <article>
+        <span>03</span>
+        <h3 id="highlight3Title">Cardápio editável</h3>
+        <p id="highlight3Text">Produtos, categorias, fotos e disponibilidade continuam sendo atualizados pelo painel admin.</p>
+      </article>
+    </section>
+
+    <section class="section menu-section" id="cardapio">
+      <div class="section-head reveal">
+        <p class="eyebrow">Escolha o seu</p>
+        <h2>Cardápio na brasa</h2>
+        <p>Selecione uma categoria, adicione ao pedido e finalize pelo WhatsApp.</p>
+      </div>
+
+      <div class="toolbar reveal">
+        <div class="category-tabs" id="categoryTabs"></div>
+        <label class="search-box">
+          <span>Buscar</span>
+          <input id="searchInput" type="search" placeholder="Ex: burger, combo, batata..." />
+        </label>
+      </div>
+
+      <div class="menu-grid" id="menuGrid"></div>
+    </section>
+
+    <section class="section about" id="sobre">
+      <div class="about-card reveal">
+        <p class="eyebrow" id="aboutEyebrow">Sobre nós</p>
+        <h2 id="aboutTitle">Não é só lanche. É experiência.</h2>
+        <p id="aboutText">O Mão na Brasa nasceu para entregar burgers com presença: pão macio, carne bem preparada, queijo derretendo e aquele aroma de brasa que abre o apetite antes da primeira mordida.</p>
+        <ul>
+          <li id="aboutLine1">Atendimento de segunda a sábado</li>
+          <li id="aboutLine2">Combos, burgers, porções, sobremesas e bebidas</li>
+          <li id="aboutLine3">Pedido enviado direto para o WhatsApp</li>
+        </ul>
+      </div>
+      <div class="about-stamp reveal delay-1">
+        <img id="aboutLogo" src="mao-na-brasa-icon-512.png" alt="Ícone Mão na Brasa" />
+      </div>
+    </section>
+
+    <section class="section contact" id="contato">
+      <div class="contact-card reveal">
+        <p class="eyebrow" id="contactEyebrow">Peça agora</p>
+        <h2 id="contactTitle">Bateu a fome?</h2>
+        <p id="contactText">Monte seu pedido no site e envie direto no WhatsApp do Mão na Brasa.</p>
+        <div class="contact-actions">
+          <a class="btn btn-primary" id="contactWhatsapp" target="_blank" rel="noopener">Chamar no WhatsApp</a>
+          <button class="btn btn-ghost" id="installBtn" type="button" hidden>Instalar app</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="cart" id="cartPanel" aria-label="Carrinho de pedidos" aria-hidden="true">
+    <button class="cart-close" id="closeCart" aria-label="Fechar carrinho">×</button>
+    <h2>Meu pedido</h2>
+    <p class="cart-helper">Confira os itens antes de enviar para o WhatsApp.</p>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-total">
+      <span>Subtotal</span>
+      <strong id="cartSubtotal">R$ 0,00</strong>
+    </div>
+    <div class="cart-total cart-fee-row">
+      <span>Entrega</span>
+      <strong id="cartDeliveryFee">R$ 0,00</strong>
+    </div>
+    <label class="checkout-field">
+      <span>Nome</span>
+      <input id="customerName" type="text" placeholder="Seu nome" autocomplete="name" />
+    </label>
+    <label class="checkout-field">
+      <span>Entrega ou retirada</span>
+      <select id="orderType">
+        <option value="entrega">Entrega</option>
+        <option value="retirada">Retirada</option>
+      </select>
+    </label>
+    <label class="checkout-field" id="addressField">
+      <span>Endereço</span>
+      <input id="customerAddress" type="text" placeholder="Rua, número, bairro" autocomplete="street-address" />
+    </label>
+    <label class="checkout-field">
+      <span>Pagamento</span>
+      <select id="paymentMethod">
+        <option value="Pix">Pix</option>
+        <option value="Cartão">Cartão</option>
+        <option value="Dinheiro">Dinheiro</option>
+      </select>
+    </label>
+    <textarea id="customerNote" placeholder="Observação do pedido. Ex: sem cebola, ponto da carne..."></textarea>
+    <div class="cart-total total-final">
+      <span>Total</span>
+      <strong id="cartTotal">R$ 0,00</strong>
+    </div>
+    <a class="btn btn-primary full" id="checkoutBtn" target="_blank" rel="noopener">Enviar pedido</a>
+  </aside>
+
+  <div class="product-preview" id="productPreview" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="productPreviewName">
+    <div class="product-preview-box">
+      <button class="cart-close product-preview-close" id="closeProductPreview" type="button" aria-label="Fechar produto">×</button>
+      <div class="product-preview-image-wrap">
+        <img id="productPreviewImage" src="" alt="" />
+      </div>
+      <div class="product-preview-content">
+        <span class="product-tag" id="productPreviewTag"></span>
+        <h2 id="productPreviewName"></h2>
+        <p id="productPreviewDescription"></p>
+        <div class="product-preview-bottom">
+          <strong class="price" id="productPreviewPrice"></strong>
+          <button class="btn btn-primary" id="productPreviewAdd" type="button">Adicionar ao pedido</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <dialog class="addon-modal" id="addonModal">
+    <div class="addon-box">
+      <button class="cart-close" id="closeAddonModal" aria-label="Fechar adicionais">×</button>
+      <p class="eyebrow">Monte do seu jeito</p>
+      <h2 id="addonProductName">Adicionais</h2>
+      <div id="addonList" class="addon-list"></div>
+      <textarea id="itemNote" placeholder="Observação deste item. Ex: sem cebola, ponto da carne..."></textarea>
+      <button class="btn btn-primary full" id="confirmAddonBtn" type="button">Adicionar ao carrinho</button>
+    </div>
+  </dialog>
+
+  <button class="floating-cart" id="openCart" aria-label="Abrir carrinho">
+    Carrinho <span id="cartCount">0</span>
+  </button>
+
+  <button class="tutorial-open" id="tutorialOpen" title="Como pedir" aria-label="Abrir tutorial">?</button>
+
+  <dialog class="tutorial-modal" id="tutorialModal">
+    <div class="tutorial-box">
+      <button class="cart-close" id="closeTutorial" aria-label="Fechar tutorial">×</button>
+      <p class="eyebrow">Primeira vez por aqui?</p>
+      <h2>Como pedir</h2>
+      <div class="tutorial-list">
+        <div><strong>1</strong><span>Escolha uma categoria e toque em adicionar.</span></div>
+        <div><strong>2</strong><span>Abra o carrinho, revise os itens e informe seus dados.</span></div>
+        <div><strong>3</strong><span>Finalize no WhatsApp com a mensagem pronta.</span></div>
+      </div>
+      <button class="btn btn-primary full" id="finishTutorial" type="button">Entendi, bora pedir</button>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <footer>
+    <strong id="footerBrand">Mão na Brasa</strong>
+    <span>© <span id="year"></span> Todos os direitos reservados.</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
